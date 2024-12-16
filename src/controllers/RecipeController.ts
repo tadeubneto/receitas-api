@@ -10,7 +10,7 @@ export const recipeController = {
             const { title } = req.body
             if(!title || title.length < 3) 
                 return res.status(400).json({error: "'O título deve ter pelo menos 3 letras"})
-            
+
             //validação dos ingredientes nao serem null ou array estar vazio
             const {ingredients} = req.body
             if(!ingredients || ingredients === null) {
@@ -50,6 +50,20 @@ export const recipeController = {
 
         }catch(error){
             return res.status(400).json({ error: 'Erro ao buscar receita'})
+
+        }
+    },
+
+    async deleteById(req: Request, res: Response): Promise<any> {
+        try{
+            const {id} = req.body
+            const recipe = await Recipe.findByIdAndDelete(req.params.id)
+            if(!recipe){
+                return res.status(404).json({ error: "Receita não encontrada "})
+            }
+            return res.status(200).json({ message: "Receita deletada com sucesso!"})
+        }catch(error){
+            return res.status(500).json({error: "Erro ao deletar a receita"})
 
         }
     }
